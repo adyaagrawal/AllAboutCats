@@ -14,7 +14,12 @@ public interface CATAPI {
     @GET("categories")
     Call<List<categorylist>> getcategorylist();
 
+    @GET("breeds")
+    Call<List<breedclass>> getbreedlist();
+
     @GET("search")
     Call<List<catclass>> getCategory(@Query("category_ids") int catid);
 
+    @GET("search")
+    Call<List<breedinfoclass>> getBreed(@Query("breed_ids") String breedid);
 }

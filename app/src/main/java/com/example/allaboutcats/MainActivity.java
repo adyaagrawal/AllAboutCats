@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -25,13 +26,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
     ImageView img;
     TextView id;
+    private ProgressBar spinner;
+    Button newimg;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         img=findViewById(R.id.imageView);
-        id=findViewById(R.id.textView5);
-        Button newimg=findViewById(R.id.button2);
+        newimg=findViewById(R.id.button2);
+        spinner = (ProgressBar)findViewById(R.id.progressBar3);
+        spinner.setVisibility(View.VISIBLE);
 
         Retrofit retrofit=new Retrofit.Builder()
                 .baseUrl("https://api.thecatapi.com/v1/images/")
@@ -48,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 List<Random> random=response.body();
                 Picasso.with(getBaseContext()).load(random.get(0).getUrl()).into(img);
+                spinner.setVisibility(View.INVISIBLE);
 
             }
 
@@ -56,9 +61,11 @@ public class MainActivity extends AppCompatActivity {
                 id.setText(t.getMessage());
             }
         });
+
         newimg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                spinner.setVisibility(View.VISIBLE);
                 Retrofit retrofit=new Retrofit.Builder()
                         .baseUrl("https://api.thecatapi.com/v1/images/")
                         .addConverterFactory(GsonConverterFactory.create())
@@ -74,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         List<Random> random=response.body();
                         Picasso.with(getBaseContext()).load(random.get(0).getUrl()).into(img);
-
+                        spinner.setVisibility(View.INVISIBLE);
                     }
 
                     @Override
@@ -84,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
+
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setSelectedItemId(R.id.nav_home);
 
@@ -99,10 +107,6 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     case R.id.nav_Category:
                         startActivity(new Intent(getApplicationContext(), Category.class));
-                        overridePendingTransition(0, 0);
-                        return true;
-                    case R.id.nav_Upload:
-                        startActivity(new Intent(getApplicationContext(), Upload.class));
                         overridePendingTransition(0, 0);
                         return true;
                 }
